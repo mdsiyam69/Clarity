@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  <a href="./README_EN.md">English</a> | 简体中文
+</p>
+
+<p align="center">
   <a href="https://www.cooragent.com/">
     <img src="https://img.shields.io/badge/Powered%20by-Cooragent-blue?style=flat-square" alt="Powered by Cooragent">
   </a>
