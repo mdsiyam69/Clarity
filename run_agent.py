@@ -17,6 +17,19 @@ Usage:
     # Daily dashboard (scan markets for potential stocks)
     python run_agent.py dashboard
     python run_agent.py dashboard -m A股 港股 -n 20
+    
+    # Dashboard with push notification
+    python run_agent.py dashboard --push                   # 推送到所有已配置渠道
+    python run_agent.py dashboard --push --push-to wechat  # 仅推送到企业微信
+    python run_agent.py dashboard -p --push-to feishu telegram  # 推送到飞书和Telegram
+
+Notification Channels (configure in .env):
+    - WECHAT_WEBHOOK_URL: 企业微信机器人
+    - FEISHU_WEBHOOK_URL: 飞书机器人
+    - TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID: Telegram Bot
+    - EMAIL_SENDER + EMAIL_PASSWORD: 邮件通知（SMTP）
+    - PUSHOVER_USER_KEY + PUSHOVER_API_TOKEN: Pushover（iOS/Android 推送）
+    - CUSTOM_WEBHOOK_URLS: 自定义 Webhook（钉钉、Discord、Slack、Bark 等）
 """
 
 import argparse
@@ -135,9 +148,12 @@ async def run_dashboard(
     markets: list[str] | None = None,
     top_n: int = 10,
     output_file: str | None = None,
+    push: bool = False,
+    push_channels: list[str] | None = None,
 ) -> None:
     """Run daily dashboard scan and output markdown report."""
     from tradingagents.core.tools.dashboard_scanner import DashboardScanner
+    from tradingagents.core.notification import NotificationService
 
     if markets is None:
         markets = ["A股", "美股"]
@@ -146,6 +162,8 @@ async def run_dashboard(
     print(f"📊 每日决策仪表盘")
     print(f"   扫描市场: {', '.join(markets)}")
     print(f"   推荐数量: Top {top_n}")
+    if push:
+        print(f"   推送通知: 开启")
     print(f"{'='*60}\n")
 
     scanner = DashboardScanner()
@@ -159,7 +177,7 @@ async def run_dashboard(
     # Print to console
     print(markdown)
 
-    # Save to file if specified
+    # Save to file
     if output_file:
         output_path = Path(output_file)
         output_path.write_text(markdown, encoding="utf-8")
@@ -171,6 +189,49 @@ async def run_dashboard(
         default_file = runtime_dir / f"dashboard_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
         default_file.write_text(markdown, encoding="utf-8")
         print(f"\n📁 报告已保存至: {default_file.absolute()}")
+
+    # Push notification
+    if push:
+        print("\n📤 正在推送通知...")
+        notification = NotificationService()
+        
+        if not notification.is_available():
+            print("⚠️  未配置通知渠道。请在 .env 中配置以下任一渠道：")
+            print("   - WECHAT_WEBHOOK_URL (企业微信)")
+            print("   - FEISHU_WEBHOOK_URL (飞书)")
+            print("   - TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (Telegram)")
+            print("   - EMAIL_SENDER + EMAIL_PASSWORD (邮件)")
+            print("   - PUSHOVER_USER_KEY + PUSHOVER_API_TOKEN (Pushover)")
+            print("   - CUSTOM_WEBHOOK_URLS (自定义 Webhook)")
+            return
+        
+        print(f"   已配置渠道: {notification.get_channel_names()}")
+        
+        # 如果指定了特定渠道，只推送到指定渠道
+        if push_channels:
+            success = False
+            for channel_name in push_channels:
+                channel_lower = channel_name.lower()
+                if "wechat" in channel_lower or "微信" in channel_lower:
+                    success = notification.send_to_wechat(markdown) or success
+                elif "feishu" in channel_lower or "飞书" in channel_lower:
+                    success = notification.send_to_feishu(markdown) or success
+                elif "telegram" in channel_lower:
+                    success = notification.send_to_telegram(markdown) or success
+                elif "email" in channel_lower or "邮件" in channel_lower:
+                    success = notification.send_to_email(markdown) or success
+                elif "pushover" in channel_lower:
+                    success = notification.send_to_pushover(markdown) or success
+                elif "custom" in channel_lower or "webhook" in channel_lower:
+                    success = notification.send_to_custom(markdown) or success
+        else:
+            # 推送到所有已配置的渠道
+            success = notification.send(markdown)
+        
+        if success:
+            print("✅ 通知推送成功！")
+        else:
+            print("❌ 通知推送失败，请检查日志")
 
 
 def _generate_dashboard_markdown(result: dict) -> str:
@@ -372,6 +433,9 @@ Examples:
   python run_agent.py dashboard                           # 扫描 A股+美股
   python run_agent.py dashboard -m A股 港股              # 扫描指定市场
   python run_agent.py dashboard -n 20 -o report.md       # 推荐20只，保存到文件
+  python run_agent.py dashboard --push                   # 扫描并推送通知
+  python run_agent.py dashboard --push --push-to wechat  # 仅推送到企业微信
+  python run_agent.py dashboard -p --push-to feishu telegram  # 推送到飞书和Telegram
         """,
     )
 
@@ -434,6 +498,18 @@ Examples:
         "-o",
         help="Output file path for markdown report",
     )
+    dashboard_parser.add_argument(
+        "--push",
+        "-p",
+        action="store_true",
+        help="Push report to configured notification channels",
+    )
+    dashboard_parser.add_argument(
+        "--push-to",
+        nargs="+",
+        choices=["wechat", "feishu", "telegram", "email", "pushover", "custom"],
+        help="Specify notification channels to push to (default: all configured)",
+    )
 
     args = parser.parse_args()
 
@@ -451,7 +527,8 @@ Examples:
     elif args.command == "ask":
         asyncio.run(run_ask(args.query))
     elif args.command == "dashboard":
-        asyncio.run(run_dashboard(args.markets, args.top, args.output))
+        push_channels = getattr(args, "push_to", None)
+        asyncio.run(run_dashboard(args.markets, args.top, args.output, args.push, push_channels))
 
 
 if __name__ == "__main__":

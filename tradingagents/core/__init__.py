@@ -10,6 +10,13 @@ from .orchestrator import (
     screen_stocks,
     track_holdings,
 )
+from .notification import (
+    NotificationChannel,
+    NotificationConfig,
+    NotificationService,
+    get_notification_service,
+    send_notification,
+)
 from .planning_manager import PlanningManager
 from .state_checker import CheckAction, StateCheckResult, StateCheckerAgent
 from .working_agent import ExecutionState, ExecutionStep, WorkingAgent
@@ -41,4 +48,10 @@ __all__ = [
     "screen_stocks",
     # Planning
     "PlanningManager",
+    # Notification
+    "NotificationChannel",
+    "NotificationConfig",
+    "NotificationService",
+    "get_notification_service",
+    "send_notification",
 ]
