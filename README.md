@@ -128,6 +128,8 @@ python webui.py --share
 
 访问 http://localhost:7860 即可使用图形界面。
 
+![Web UI 界面](assets/webui.png)
+
 ### CLI 命令
 
 ```bash
@@ -323,7 +325,7 @@ config = AgentConfig(
 
 ## 支持与贡献
 
-本项目由 **[Cooragent](https://www.cooragent.com/)** 团队提供技术支持。Cooragent 是自演进的多智能体平台，致力于让每个人都能成为 Agent 的指挥官。
+本项目由 Cooragent 团队提供技术支持。Cooragent 是自演进的多智能体平台，致力于让每个人都能成为 Agent 的指挥官。
 
 ### 🌟 支持我们
 
@@ -336,7 +338,8 @@ config = AgentConfig(
 
 ### 📮 联系我们
 
-- 🌐 官网：[cooragent.com](https://www.cooragent.com/)
+
+- 🌐 飞书: [cooragent](https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=251mf86f-8106-4361-81aa-05fa856abc05)
 - 📧 问题反馈：请通过 [GitHub Issues](https://github.com/cooragent/Clarity/issues) 提交
 
 ---

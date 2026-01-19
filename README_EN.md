@@ -126,6 +126,8 @@ python webui.py
 python webui.py --share
 ```
 
+![Web UI](assets/webui.png)
+
 Visit http://localhost:7860 to use the graphical interface.
 
 ### CLI Commands
@@ -323,7 +325,7 @@ config = AgentConfig(
 
 ## Support & Contributing
 
-This project is supported by the **[Cooragent](https://www.cooragent.com/)** team. Cooragent is an AI agent platform , dedicated to making everyone a commander of AI agents, which adapt, evolve, and stay aligned with users.
+This project is supported by cooragent team. Cooragent is an AI agent platform , dedicated to making everyone a commander of AI agents, which adapt, evolve, and stay aligned with users.
 
 ### 🌟 Support Us
 
@@ -336,7 +338,7 @@ If you find this project helpful:
 
 ### 📮 Contact Us
 
-- 🌐 Website: [cooragent.com](https://www.cooragent.com/)
+- 🌐 FeiShu: [cooragent](https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=251mf86f-8106-4361-81aa-05fa856abc05)
 - 📧 Feedback: Please submit via [GitHub Issues](https://github.com/cooragent/Clarity/issues)
 
 ---
