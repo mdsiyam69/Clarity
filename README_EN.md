@@ -82,7 +82,7 @@ Create a `.env` file:
 
 ```bash
 # ===== Required =====
-ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_API_KEY=your_openai_api_key
 FINNHUB_API_KEY=your_finnhub_api_key
 
 # ===== Optional: Web Search =====
@@ -115,6 +115,18 @@ CUSTOM_WEBHOOK_URLS=https://discord.com/api/webhooks/xxx
 ---
 
 ## Usage
+
+### Web UI
+
+```bash
+# Start Web interface
+python webui.py
+
+# Create a public link (via Gradio Share)
+python webui.py --share
+```
+
+Visit http://localhost:7860 to use the graphical interface.
 
 ### CLI Commands
 
@@ -237,6 +249,7 @@ The system uses three persistent files to manage long-running tasks:
 ```
 Clarity/
 ├── run_agent.py          # CLI entry point
+├── webui.py              # Web UI (Gradio)
 ├── templates/            # Planning file templates
 ├── runtime/              # Runtime files (git-ignored)
 │   ├── task_plan.md
@@ -299,9 +312,9 @@ See `tradingagents/core/config.py`:
 from tradingagents import AgentConfig
 
 config = AgentConfig(
-    llm_provider="anthropic",           # anthropic, openai, google
-    deep_think_llm="claude-sonnet-4-20250514",
-    online_tools=True,                  # Use online tools
+    llm_provider="openai",              # openai, anthropic, google
+    deep_think_llm="gpt-5.2",
+    online_tools=True,                
     max_retries=3,
 )
 ```

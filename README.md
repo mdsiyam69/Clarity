@@ -82,7 +82,7 @@ pip install -e .
 
 ```bash
 # ===== 必需配置 =====
-ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_API_KEY=your_openai_api_key
 FINNHUB_API_KEY=your_finnhub_api_key
 
 # ===== 可选：网络搜索 =====
@@ -115,6 +115,18 @@ CUSTOM_WEBHOOK_URLS=https://oapi.dingtalk.com/robot/send?access_token=xxx
 ---
 
 ## 使用方法
+
+### Web UI
+
+```bash
+# 启动 Web 界面
+python webui.py
+
+# 创建公开链接（通过 Gradio Share）
+python webui.py --share
+```
+
+访问 http://localhost:7860 即可使用图形界面。
 
 ### CLI 命令
 
@@ -237,6 +249,7 @@ notification.send("# 测试报告\n这是 Markdown 格式的消息")
 ```
 Clarity/
 ├── run_agent.py          # CLI 入口
+├── webui.py              # Web UI (Gradio)
 ├── templates/            # 规划文件模板
 ├── runtime/              # 运行时文件（git-ignored）
 │   ├── task_plan.md
@@ -299,8 +312,8 @@ Clarity/
 from tradingagents import AgentConfig
 
 config = AgentConfig(
-    llm_provider="anthropic",           # anthropic, openai, google
-    deep_think_llm="claude-sonnet-4-20250514",
+    llm_provider="openai",              # openai, anthropic, google
+    deep_think_llm="gpt-5.2",
     online_tools=True,                  # 使用在线工具
     max_retries=3,
 )
