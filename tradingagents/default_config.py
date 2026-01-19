@@ -5,7 +5,7 @@ _PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "."))
 
 DEFAULT_CONFIG = {
     "project_dir": _PROJECT_DIR,
-    "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", "./results"),
+    "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", "./runtime/results"),
     # Data directory - use environment variable or default to local cache
     "data_dir": os.getenv(
         "TRADINGAGENTS_DATA_DIR",

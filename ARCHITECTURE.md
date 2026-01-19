@@ -222,14 +222,22 @@ See `configs/agent_config.yaml` for full configuration options.
 
 ```
 TradingAgents/
-├── run_agent.py                 # Main entry point
+├── run_agent.py                 # CLI entry point
+├── api_server.py                # FastAPI server
+├── test_api.py                  # API test script
 ├── configs/
 │   └── agent_config.yaml        # Configuration
 ├── templates/
 │   ├── task_plan.md             # Task plan template
 │   ├── findings.md              # Findings template
 │   └── progress.md              # Progress template
+├── runtime/                     # Runtime-generated files (git-ignored)
+│   ├── task_plan.md             # Current task plan
+│   ├── findings.md              # Research findings
+│   ├── progress.md              # Execution log
+│   └── results/                 # Analysis results
 └── tradingagents/
+    ├── __init__.py              # Package exports
     ├── core/
     │   ├── __init__.py
     │   ├── base_agent.py        # BaseSubAgent class
@@ -240,17 +248,15 @@ TradingAgents/
     │   ├── planning_manager.py  # Planning file management
     │   ├── orchestrator.py      # Main orchestrator
     │   ├── subagents/
-    │   │   ├── __init__.py
     │   │   ├── fundamentals_analyst.py
     │   │   ├── sentiment_analyst.py
     │   │   ├── news_analyst.py
     │   │   ├── technical_analyst.py
-    │   │   ├── holdings_hunter.py    # New
-    │   │   └── alpha_hound.py        # New
+    │   │   ├── holdings_hunter.py
+    │   │   └── alpha_hound.py
     │   └── tools/
-    │       ├── __init__.py
     │       ├── finnhub_tools.py
     │       ├── search_tools.py
     │       └── web_tools.py
-    └── dataflows/               # Original data utilities
+    └── dataflows/               # Data utilities
 ```

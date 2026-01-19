@@ -1,4 +1,5 @@
 env/
+.venv/
 __pycache__/
 .DS_Store
 *.csv
@@ -7,3 +8,10 @@ eval_results/
 eval_data/
 *.egg-info/
 .env
+
+# Runtime files (generated during execution)
+runtime/*
+!runtime/.gitkeep
+
+# Legacy code (old architecture)
+_legacy/

@@ -1,0 +1,7 @@
+# This directory contains runtime-generated files:
+# - task_plan.md: Current task plan
+# - findings.md: Research findings
+# - progress.md: Execution log
+# - results/: Analysis results
+#
+# These files are auto-generated and ignored by git.

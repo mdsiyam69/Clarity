@@ -17,9 +17,13 @@ class PlanningManager:
         self.project_root = config.project_dir.parent
         self.templates_dir = config.templates_dir
 
-        self.task_plan_path = self.project_root / "task_plan.md"
-        self.findings_path = self.project_root / "findings.md"
-        self.progress_path = self.project_root / "progress.md"
+        # Runtime directory for generated files
+        self.runtime_dir = self.project_root / "runtime"
+        self.runtime_dir.mkdir(exist_ok=True)
+
+        self.task_plan_path = self.runtime_dir / "task_plan.md"
+        self.findings_path = self.runtime_dir / "findings.md"
+        self.progress_path = self.runtime_dir / "progress.md"
 
     def initialize_files(self, context: TaskContext) -> None:
         """Initialize planning files from templates with task context."""
