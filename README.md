@@ -82,7 +82,7 @@ pip install -e .
 
 ```bash
 # ===== 必需配置 =====
-ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_API_KEY=your_openai_api_key
 FINNHUB_API_KEY=your_finnhub_api_key
 
 # ===== 可选：网络搜索 =====
@@ -121,9 +121,6 @@ CUSTOM_WEBHOOK_URLS=https://oapi.dingtalk.com/robot/send?access_token=xxx
 ```bash
 # 启动 Web 界面
 python webui.py
-
-# 指定端口
-python webui.py --port 8080
 
 # 创建公开链接（通过 Gradio Share）
 python webui.py --share

@@ -82,7 +82,7 @@ Create a `.env` file:
 
 ```bash
 # ===== Required =====
-ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_API_KEY=your_openai_api_key
 FINNHUB_API_KEY=your_finnhub_api_key
 
 # ===== Optional: Web Search =====
@@ -121,9 +121,6 @@ CUSTOM_WEBHOOK_URLS=https://discord.com/api/webhooks/xxx
 ```bash
 # Start Web interface
 python webui.py
-
-# Specify port
-python webui.py --port 8080
 
 # Create a public link (via Gradio Share)
 python webui.py --share
