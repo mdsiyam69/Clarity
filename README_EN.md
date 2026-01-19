@@ -312,9 +312,9 @@ See `tradingagents/core/config.py`:
 from tradingagents import AgentConfig
 
 config = AgentConfig(
-    llm_provider="anthropic",           # anthropic, openai, google
-    deep_think_llm="claude-sonnet-4-20250514",
-    online_tools=True,                  # Use online tools
+    llm_provider="openai",              # openai, anthropic, google
+    deep_think_llm="gpt-5.2",
+    online_tools=True,                
     max_retries=3,
 )
 ```

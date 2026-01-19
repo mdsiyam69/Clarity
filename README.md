@@ -312,8 +312,8 @@ Clarity/
 from tradingagents import AgentConfig
 
 config = AgentConfig(
-    llm_provider="anthropic",           # anthropic, openai, google
-    deep_think_llm="claude-sonnet-4-20250514",
+    llm_provider="openai",              # openai, anthropic, google
+    deep_think_llm="gpt-5.2",
     online_tools=True,                  # 使用在线工具
     max_retries=3,
 )
