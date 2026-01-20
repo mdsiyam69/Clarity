@@ -71,9 +71,6 @@ cd Clarity
 
 # Using uv (recommended)
 uv sync
-
-# Or using pip
-pip install -e .
 ```
 
 ### Configuration
@@ -112,6 +109,18 @@ PUSHOVER_API_TOKEN=xxx
 CUSTOM_WEBHOOK_URLS=https://discord.com/api/webhooks/xxx
 ```
 
+#### Qwen (OpenAI-compatible mode)
+
+```bash
+# ===== Optional: Qwen =====
+# Switch at runtime via CLI: uv run run_agent.py --model qwen ...
+QWEN_API_KEY=your_dashscope_api_key
+QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+QWEN_MODEL=qwen-latest
+```
+
+For web search in Qwen mode, set `SERPER_API_KEY` (recommended). If not set, it will fall back to scraping Google News, which may be rate-limited.
+
 ---
 
 ## Usage
@@ -119,14 +128,17 @@ CUSTOM_WEBHOOK_URLS=https://discord.com/api/webhooks/xxx
 ### Web UI
 
 ```bash
+# activate env
+source .venv/bin/activate 
+
 # Start Web interface
-python webui.py
+uv run python webui.py
 
 # Create a public link (via Gradio Share)
-python webui.py --share
+uv run python webui.py --share
 ```
 
-![Web UI](assets/webui.png)
+<video src="assets/ui.mp4" controls width="800"></video>
 
 Visit http://localhost:7860 to use the graphical interface.
 
@@ -134,24 +146,25 @@ Visit http://localhost:7860 to use the graphical interface.
 
 ```bash
 # Analyze a stock
-python run_agent.py analyze AAPL
-python run_agent.py analyze NVDA --date 2025-01-15
+uv run python run_agent.py analyze AAPL
+uv run python run_agent.py analyze NVDA --date 2025-01-15
+uv run python run_agent.py --model qwen analyze AAPL
 
 # Track investor holdings
-python run_agent.py track "Warren Buffett"
+uv run python run_agent.py track "Warren Buffett"
 
 # Screen stocks
-python run_agent.py screen "high dividend yield tech stocks"
+uv run python run_agent.py screen "high dividend yield tech stocks"
 
 # Natural language query
-python run_agent.py ask "analyze Apple stock"
+uv run python run_agent.py ask "analyze Apple stock"
 
 # Decision dashboard
-python run_agent.py dashboard                           # Scan A-shares + US stocks
-python run_agent.py dashboard -m A股 港股              # Scan specific markets
-python run_agent.py dashboard -n 20 -o report.md       # Top 20, save to file
-python run_agent.py dashboard --push                   # Scan and push notifications
-python run_agent.py dashboard -p --push-to telegram    # Push to Telegram only
+uv run python run_agent.py dashboard                           # Scan A-shares + US stocks
+uv run python run_agent.py dashboard -m A股 港股              # Scan specific markets
+uv run python run_agent.py dashboard -n 20 -o report.md       # Top 20, save to file
+uv run python run_agent.py dashboard --push                   # Scan and push notifications
+uv run python run_agent.py dashboard -p --push-to telegram    # Push to Telegram only
 ```
 
 ### Python Code
@@ -188,7 +201,7 @@ notification.send("# Test Report\nThis is a Markdown message")
 Using `run_track("Warren Buffett")` as an example:
 
 ```
-User Input: python run_agent.py track "Warren Buffett"
+User Input: uv run python run_agent.py track "Warren Buffett"
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -291,7 +304,7 @@ Clarity/
 | **Sentiment Analyst** | Analyze market sentiment and social media discussions | Stock Analysis |
 | **Holdings Hunter** | Track institutional and famous investor holdings | Holdings Tracking |
 | **Alpha Hound** | Screen stocks based on complex criteria | Stock Screening |
-| **Daily Dashboard** | Daily market scan and stock recommendations | Decision Dashboard |
+| **Daily Dashboard** | Daily market scan qualified stock  | Decision Dashboard |
 
 ### Notification Channels
 
@@ -343,11 +356,6 @@ If you find this project helpful:
 
 ---
 
-## License
-
-Apache 2.0
-
----
 
 ## Star History
 
