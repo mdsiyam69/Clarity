@@ -304,7 +304,7 @@ Clarity/
 | **Sentiment Analyst** | Analyze market sentiment and social media discussions | Stock Analysis |
 | **Holdings Hunter** | Track institutional and famous investor holdings | Holdings Tracking |
 | **Alpha Hound** | Screen stocks based on complex criteria | Stock Screening |
-| **Daily Dashboard** | Daily market scan qualified stock  | Decision Dashboard |
+| **Daily Dashboard** | Daily market scan with stock | Decision Dashboard |
 
 ### Notification Channels
 

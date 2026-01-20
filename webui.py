@@ -535,7 +535,7 @@ def run_dashboard_streaming(markets: list, top_n: int = 10):
                         except Exception:
                             pass
                     
-                    yield f"  ✅ A股 分析完成，找到 {len([c for c in all_candidates if c.market == 'A股'])} 只潜力股\n\n"
+                    yield f"  ✅ A股 分析完成，找到 {len([c for c in all_candidates if c.market == 'A股'])} 只值得关注\n\n"
                     
                 elif market == '美股':
                     hot_stocks = scanner._get_hot_us_stocks(limit=50)
@@ -558,7 +558,7 @@ def run_dashboard_streaming(markets: list, top_n: int = 10):
                         except Exception:
                             pass
                     
-                    yield f"  ✅ 美股 分析完成，找到 {len([c for c in all_candidates if c.market == '美股'])} 只潜力股\n\n"
+                    yield f"  ✅ 美股 分析完成，找到 {len([c for c in all_candidates if c.market == '美股'])} 只值得关注\n\n"
                     
                 elif market == '港股':
                     hot_stocks = scanner._get_hot_hk_stocks(limit=30)
@@ -579,7 +579,7 @@ def run_dashboard_streaming(markets: list, top_n: int = 10):
                         except Exception:
                             pass
                     
-                    yield f"  ✅ 港股 分析完成，找到 {len([c for c in all_candidates if c.market == '港股'])} 只潜力股\n\n"
+                    yield f"  ✅ 港股 分析完成，找到 {len([c for c in all_candidates if c.market == '港股'])} 只值得关注\n\n"
                     
             except Exception as e:
                 yield f"  ❌ {market} 扫描失败: {str(e)[:100]}\n\n"
@@ -588,13 +588,13 @@ def run_dashboard_streaming(markets: list, top_n: int = 10):
         
         # ===== 阶段 4: 排序并生成报告 =====
         yield "### 📊 生成分析报告\n\n"
-        yield f"**{spinner_frames[3]} 正在对 {len(all_candidates)} 只潜力股进行排序...**\n\n"
+        yield f"**{spinner_frames[3]} 正在对 {len(all_candidates)} 只值得关注进行排序...**\n\n"
         
         # 排序
         all_candidates.sort(key=lambda x: x.score, reverse=True)
         top_candidates = all_candidates[:top_n]
         
-        yield f"  ✅ 筛选出 Top {len(top_candidates)} 潜力股\n\n"
+        yield f"  ✅ 筛选出 Top {len(top_candidates)} 值得关注\n\n"
         
         # 构建结果
         result = {
@@ -669,7 +669,7 @@ def generate_dashboard_markdown(result: dict) -> str:
     lines.append("")
 
     # Top Recommendations
-    lines.append("## 🏆 今日潜力股 Top 10")
+    lines.append("## 🏆 今日值得关注 Top 10")
     lines.append("")
 
     recommendations = result.get("recommendations", [])
@@ -859,7 +859,7 @@ def create_ui():
             
             # ===== 决策仪表盘 Tab =====
             with gr.TabItem("📊 决策仪表盘", id="dashboard"):
-                gr.Markdown("### 每日市场扫描，发现潜力股票")
+                gr.Markdown("### 每日市场扫描，发现值得关注票")
                 
                 with gr.Row():
                     with gr.Column(scale=1):
