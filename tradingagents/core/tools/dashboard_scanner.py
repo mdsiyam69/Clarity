@@ -5,7 +5,7 @@ DashboardScanner - 决策仪表盘扫描器
 
 功能：
 1. 每日扫描大盘，获取市场概览
-2. 筛选潜力股票，推荐 Top 10
+2. 筛选值得关注票，推荐 Top 10
 3. 支持 A股、H股、美股（纳斯达克）
 
 数据源：
@@ -224,7 +224,7 @@ class DashboardScanner:
     功能：
     1. 扫描大盘获取市场概览
     2. 动态获取热门股票池
-    3. 筛选潜力股票
+    3. 筛选值得关注票
     4. 生成每日推荐报告
     """
     
@@ -1097,7 +1097,7 @@ class DashboardScanner:
         
         # 推荐股票
         if result['recommendations']:
-            lines.append("### Top 10 潜力股推荐\n")
+            lines.append("### Top 10 值得关注推荐\n")
             lines.append("| 排名 | 代码 | 名称 | 市场 | 现价 | 涨跌幅 | 评分 | 信号 |")
             lines.append("|------|------|------|------|------|--------|------|------|")
             

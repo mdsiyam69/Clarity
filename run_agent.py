@@ -309,7 +309,7 @@ def _generate_dashboard_markdown(result: dict) -> str:
     lines.append("")
 
     # Top Recommendations
-    lines.append("## 🏆 今日潜力股 Top 10")
+    lines.append("## 🏆 今日值得关注 Top 10")
     lines.append("")
 
     recommendations = result.get("recommendations", [])
