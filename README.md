@@ -53,11 +53,11 @@ Clarity 是一个基于 **原生 Claude-skill** 架构构建的金融分析智�
 
 | 功能 | 描述 | 命令 |
 |:-----|:-----|:-----|
-| **股票分析** | 深度分析特定股票的技术面、基本面、新闻和市场情绪 | `analyze AAPL` |
 | **持仓跟踪** | 追踪知名投资者（如 Warren Buffett）的最新持仓变化 | `track "Warren Buffett"` |
+| **股票分析** | 深度分析特定股票的技术面、基本面、新闻和市场情绪 | `analyze AAPL` |
 | **股票筛选** | 根据复杂条件筛选符合要求的股票 | `screen "高股息科技股"` |
 | **自然语言查询** | 支持中英文自然语言查询 | `ask "分析苹果公司"` |
-| **决策仪表盘** | 每日扫描市场，推荐潜力股票并生成报告 | `dashboard` |
+| **决策仪表盘** | 每日扫描热门股票并生成报告 | `dashboard` |
 
 ---
 
@@ -71,9 +71,6 @@ cd Clarity
 
 # 使用 uv（推荐）
 uv sync
-
-# 或使用 pip
-pip install -e .
 ```
 
 ### 配置
@@ -116,7 +113,7 @@ CUSTOM_WEBHOOK_URLS=https://oapi.dingtalk.com/robot/send?access_token=xxx
 
 ```bash
 # ===== 可选：Qwen =====
-# 运行时通过 CLI 参数切换：python run_agent.py --model qwen ...
+# 运行时通过 CLI 参数切换：uv run run_agent.py --model qwen ...
 QWEN_API_KEY=your_dashscope_api_key
 QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 QWEN_MODEL=qwen-latest
@@ -131,11 +128,14 @@ Qwen 模式下如需联网检索，建议配置 `SERPER_API_KEY`。未配置时�
 ### Web UI
 
 ```bash
+# 启动环境
+source .venv/bin/activate 
+
 # 启动 Web 界面
-python webui.py
+uv run python webui.py
 
 # 创建公开链接（通过 Gradio Share）
-python webui.py --share
+uv run python webui.py --share
 ```
 
 访问 http://localhost:7860 即可使用图形界面。
@@ -146,25 +146,25 @@ python webui.py --share
 
 ```bash
 # 分析股票
-python run_agent.py analyze AAPL
-python run_agent.py analyze NVDA --date 2025-01-15
-python run_agent.py --model qwen analyze AAPL
+uv run python run_agent.py analyze AAPL
+uv run python run_agent.py analyze NVDA --date 2025-01-15
+uv run python run_agent.py --model qwen analyze AAPL
 
 # 跟踪投资者持仓
-python run_agent.py track "Warren Buffett"
+uv run python run_agent.py track "Warren Buffett"
 
 # 筛选股票
-python run_agent.py screen "high dividend yield tech stocks"
+uv run python run_agent.py screen "high dividend yield tech stocks"
 
 # 自然语言查询
-python run_agent.py ask "分析一下苹果公司的股票"
+uv run python run_agent.py ask "分析一下苹果公司的股票"
 
 # 决策仪表盘
-python run_agent.py dashboard                           # 扫描 A股+美股
-python run_agent.py dashboard -m A股 港股              # 扫描指定市场
-python run_agent.py dashboard -n 20 -o report.md       # 推荐20只，保存到文件
-python run_agent.py dashboard --push                   # 扫描并推送通知
-python run_agent.py dashboard -p --push-to wechat      # 仅推送到企业微信
+uv run python run_agent.py dashboard                           # 扫描 A股+美股
+uv run python run_agent.py dashboard -m A股 港股              # 扫描指定市场
+uv run python run_agent.py dashboard -n 20 -o report.md       # 推荐20只，保存到文件
+uv run python run_agent.py dashboard --push                   # 扫描并推送通知
+uv run python run_agent.py dashboard -p --push-to wechat      # 仅推送到企业微信
 ```
 
 ### Python 代码
@@ -201,7 +201,7 @@ notification.send("# 测试报告\n这是 Markdown 格式的消息")
 以 `run_track("Warren Buffett")` 为例，展示系统工作流程：
 
 ```
-用户输入: python run_agent.py track "Warren Buffett"
+用户输入: uv run python run_agent.py track "Warren Buffett"
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -355,13 +355,7 @@ config = AgentConfig(
 - 🌐 飞书: [cooragent](https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=251mf86f-8106-4361-81aa-05fa856abc05)
 - 📧 问题反馈：请通过 [GitHub Issues](https://github.com/cooragent/Clarity/issues) 提交
 
----
 
-## License
-
-Apache 2.0
-
----
 
 ## Star History
 
