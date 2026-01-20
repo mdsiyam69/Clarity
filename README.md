@@ -140,7 +140,7 @@ uv run python webui.py --share
 
 访问 http://localhost:7860 即可使用图形界面。
 
-![Web UI 界面](assets/webui.png)
+<video src="assets/ui.mp4" controls width="800"></video>
 
 ### CLI 命令
 
