@@ -36,28 +36,51 @@
 
 ## Introduction
 
-Clarity is a financial analysis agent framework built on the **native Claude-skill** architecture. It adopts the **Planning-with-Files** pattern, using persistent task plans, research findings, and progress logs to coordinate multiple specialized sub-agents for complex financial analysis tasks.
+Clarity is a financial analysis agent built on the **native Claude-skill** architecture, supporting stock analysis, holdings tracking, screening strategies, and decision dashboards. Using the **Planning-with-Files** pattern with multi-agent collaboration for complex financial tasks.
 
 ### Key Features
 
-- 🧠 **Native Claude-skill Architecture**: Following Anthropic's recommended agent design patterns
-- 📁 **Planning-with-Files**: Context persistence through file system, solving LLM's "forgetting" problem in long tasks
-- 🤖 **Multi-Agent Collaboration**: 6 specialized sub-agents working together with clear division of labor
-- 📊 **Decision Dashboard**: Daily market scanning with potential stock recommendations
-- 🔔 **Multi-Channel Notifications**: WeChat Work, Feishu, Telegram, Email, and more
-- 🌐 **Multi-Market Support**: A-shares, Hong Kong stocks, and US stocks (NASDAQ)
+- 🧠 **Claude-skill Native Architecture** - Following Anthropic's recommended patterns
+- 🌐 **Multi-Market Coverage** - A-shares, HK stocks, US stocks with auto data source switching
+- 📊 **6 Specialized Agents** - Fundamentals, technicals, news, sentiment, holdings, screening
+- 🔔 **Multi-Channel Push** - WeChat Work, Feishu, Telegram, Email, etc.
+- 🚀 **REST API & Web UI** - Complete interface and graphical dashboard
+
+---
+
+## Data Sources
+
+Clarity integrates multiple financial data sources with automatic selection based on market type:
+
+| Data Type | Source | Market Coverage | Notes |
+|:----------|:-------|:----------------|:------|
+| **A-share Quotes** | AkShare | Shanghai/Shenzhen/STAR/ChiNext | Real-time |
+| **A-share Quotes** | EFinance | Shanghai/Shenzhen/STAR/ChiNext | Backup source |
+| **Global Quotes** | yFinance | US/HK/A-shares | Worldwide |
+| **Financials** | SimFin | US stocks | Financial statements |
+| **News** | Finnhub | Global | Company news |
+| **News** | Google News | Global | Aggregated news |
+| **Social Sentiment** | Reddit | Global | Community discussions |
+| **Technical Indicators** | Stockstats | Global | Technical analysis |
+| **Web Search** | Serper API | Global | Enhanced search |
+| **Content Extraction** | Jina AI | Global | Web parsing |
+
+**Data Source Priority Strategy:**
+- **A-shares**: AkShare (primary) → EFinance (backup) → yFinance (fallback)
+- **HK stocks**: yFinance
+- **US stocks**: yFinance + Finnhub + SimFin
 
 ---
 
 ## Features
 
-| Feature | Description | Command |
-|:--------|:------------|:--------|
-| **Stock Analysis** | Deep analysis of technicals, fundamentals, news, and market sentiment | `analyze AAPL` |
-| **Holdings Tracking** | Track holdings of famous investors (e.g., Warren Buffett) | `track "Warren Buffett"` |
-| **Stock Screening** | Filter stocks based on complex criteria | `screen "high dividend tech"` |
-| **Natural Language Query** | Support for English and Chinese queries | `ask "analyze Apple"` |
-| **Decision Dashboard** | Daily market scan with stock recommendations | `dashboard` |
+| Feature | Description |
+|:--------|:------------|
+| **Stock Analysis** | 4-dimension deep analysis: technicals + fundamentals + news + sentiment |
+| **Holdings Tracking** | Track Warren Buffett and other famous investors' latest holdings |
+| **Stock Screening** | Natural language based stock filtering |
+| **Decision Dashboard** | Daily market scan with recommended stocks |
+| **Multi-Channel Push** | Auto push reports to WeChat Work, Feishu, Telegram, etc. |
 
 ---
 
@@ -79,47 +102,27 @@ Create a `.env` file:
 
 ```bash
 # ===== Required =====
-OPENAI_API_KEY=your_openai_api_key
-FINNHUB_API_KEY=your_finnhub_api_key
+OPENAI_API_KEY=your_openai_api_key           # OpenAI API (or compatible)
+FINNHUB_API_KEY=your_finnhub_api_key         # Finnhub news (free tier available)
 
-# ===== Optional: Web Search =====
-SERPER_API_KEY=your_serper_api_key
-JINA_API_KEY=your_jina_api_key
+# ===== Optional: Enhanced Search (Recommended) =====
+SERPER_API_KEY=your_serper_api_key           # Google Search API
+JINA_API_KEY=your_jina_api_key               # Web content extraction
 
 # ===== Optional: Notification Channels =====
-# WeChat Work Bot
-WECHAT_WEBHOOK_URL=https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
-
-# Feishu/Lark Bot
-FEISHU_WEBHOOK_URL=https://open.feishu.cn/open-apis/bot/v2/hook/xxx
-
-# Telegram Bot
-TELEGRAM_BOT_TOKEN=123456:ABC-DEF...
+WECHAT_WEBHOOK_URL=https://qyapi.weixin.qq.com/...     # WeChat Work
+FEISHU_WEBHOOK_URL=https://open.feishu.cn/...          # Feishu/Lark
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF...                   # Telegram
 TELEGRAM_CHAT_ID=123456789
-
-# Email (auto-detect SMTP for Gmail, Outlook, etc.)
-EMAIL_SENDER=your@gmail.com
+EMAIL_SENDER=your@gmail.com                            # Email
 EMAIL_PASSWORD=app_password
 
-# Pushover (iOS/Android push)
-PUSHOVER_USER_KEY=xxx
-PUSHOVER_API_TOKEN=xxx
-
-# Custom Webhook (DingTalk, Discord, Slack, Bark, etc.)
-CUSTOM_WEBHOOK_URLS=https://discord.com/api/webhooks/xxx
-```
-
-#### Qwen (OpenAI-compatible mode)
-
-```bash
-# ===== Optional: Qwen =====
-# Switch at runtime via CLI: uv run run_agent.py --model qwen ...
+# ===== Optional: Qwen Model (Alibaba Qwen) =====
 QWEN_API_KEY=your_dashscope_api_key
 QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 QWEN_MODEL=qwen-latest
+# Usage: uv run run_agent.py --model qwen analyze AAPL
 ```
-
-For web search in Qwen mode, set `SERPER_API_KEY` (recommended). If not set, it will fall back to scraping Google News, which may be rate-limited.
 
 ---
 
@@ -262,142 +265,48 @@ notification.send("# Test Report\nThis is a Markdown message")
 
 ---
 
-## Workflow
-
-Using `run_track("Warren Buffett")` as an example:
-
-```
-User Input: uv run python run_agent.py track "Warren Buffett"
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    run_agent.py                             │
-│                                                             │
-│  1. Load .env environment variables                         │
-│  2. Create AgentConfig                                      │
-│  3. Create FinancialAgentOrchestrator                       │
-│  4. Call orchestrator.run(task_type=HOLDINGS_TRACKING, ...) │
-└─────────────────────────────────────────────────────────────┘
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│               FinancialAgentOrchestrator                    │
-│                                                             │
-│  1. MasterAgent.create_task_plan()  ──► Init task_plan.md   │
-│  2. WorkingAgent.execute_plan()     ──► Execute SubAgents   │
-│  3. StateChecker.validate_step()    ──► Validate/Retry      │
-│  4. MasterAgent.synthesize_results() ──► Generate report    │
-└─────────────────────────────────────────────────────────────┘
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   SubAgents Execution                        │
-│                                                             │
-│  Step 1: HoldingsHunter                                     │
-│    ├─► Search SEC 13F filings                               │
-│    ├─► Parse holdings data                                  │
-│    └─► Generate holdings report                             │
-│                                                             │
-│  Step 2: NewsAnalyst                                        │
-│    └─► Search and analyze related news                      │
-│                                                             │
-│  After each step, update Planning Files:                    │
-│    • findings.md  ←  Append analysis results                │
-│    • progress.md  ←  Append progress logs                   │
-│    • task_plan.md ←  Update status table                    │
-└─────────────────────────────────────────────────────────────┘
-```
+## How It Works
 
 ### Planning-with-Files Pattern
 
-The system uses three persistent files to manage long-running tasks:
+The system uses three persistent files to manage long tasks, solving LLM "forgetting" problem:
 
-| File | Purpose | Update Timing |
-|:-----|:--------|:--------------|
-| `task_plan.md` | Task plan, phase status, SubAgent assignments | Task start, status changes |
-| `findings.md` | Research findings, API data, analysis results | After each SubAgent completes |
-| `progress.md` | Execution logs, error records, retry tracking | After each operation |
+| File | Purpose |
+|:-----|:--------|
+| `task_plan.md` | Task plan, phase status, agent assignments |
+| `findings.md` | Research findings, API data, analysis results |
+| `progress.md` | Execution logs, error records, retry tracking |
 
-**Core Rules:**
-- **2-Action Rule**: Update `findings.md` after every 2 actions
-- **Re-read Before Decisions**: Re-read `task_plan.md` before critical decisions
-- **Error Persistence**: All errors are logged to files to avoid repeating mistakes
+**Execution Flow:** MasterAgent plans → WorkingAgent executes → SubAgents work → StateChecker validates → Generate report
 
 ---
 
 ## Architecture
 
+### Core Agents
+
+| Agent | Responsibility |
+|:------|:--------------|
+| **MasterAgent** | Task planning, result synthesis |
+| **WorkingAgent** | Execution coordination, flow control |
+| **StateChecker** | State validation, error retry |
+| **Fundamentals Analyst** | Financial statements, fundamentals |
+| **Technical Analyst** | Technical indicators (MACD, RSI, Bollinger) |
+| **News Analyst** | News collection & sentiment analysis |
+| **Sentiment Analyst** | Social media sentiment monitoring |
+| **Holdings Hunter** | Institutional holdings tracking (SEC 13F) |
+| **Alpha Hound** | Stock screening & scoring |
+
+### Directory Structure
+
 ```
 Clarity/
-├── run_agent.py          # CLI entry point
-├── webui.py              # Web UI (Gradio)
-├── templates/            # Planning file templates
-├── runtime/              # Runtime files (git-ignored)
-│   ├── task_plan.md
-│   ├── findings.md
-│   ├── progress.md
-│   └── reports/
+├── api.py               # REST API server
+├── webui.py             # Gradio Web interface
+├── run_agent.py         # CLI command tool
 └── clarity/
-    ├── core/             # Core agents
-    │   ├── orchestrator.py     # Orchestrator
-    │   ├── master_agent.py     # Master agent (planning)
-    │   ├── working_agent.py    # Working agent (execution)
-    │   ├── state_checker.py    # State checker
-    │   ├── notification.py     # Notification service
-    │   ├── subagents/          # Sub-agents
-    │   │   ├── fundamentals_analyst.py
-    │   │   ├── sentiment_analyst.py
-    │   │   ├── news_analyst.py
-    │   │   ├── technical_analyst.py
-    │   │   ├── holdings_hunter.py
-    │   │   ├── alpha_hound.py
-    │   │   └── daily_dashboard.py
-    │   └── tools/              # Tools
-    │       ├── finnhub_tools.py
-    │       ├── search_tools.py
-    │       ├── dashboard_scanner.py
-    │       └── data_provider/
-    └── dataflows/        # Data utilities
-```
-
-### Sub-Agents
-
-| Agent | Responsibility | Use Case |
-|:------|:---------------|:---------|
-| **Fundamentals Analyst** | Analyze financial statements and fundamental metrics | Stock Analysis |
-| **Technical Analyst** | Analyze technical indicators (MACD, RSI, Bollinger Bands, etc.) | Stock Analysis |
-| **News Analyst** | Collect and analyze relevant news | All Tasks |
-| **Sentiment Analyst** | Analyze market sentiment and social media discussions | Stock Analysis |
-| **Holdings Hunter** | Track institutional and famous investor holdings | Holdings Tracking |
-| **Alpha Hound** | Screen stocks based on complex criteria | Stock Screening |
-| **Daily Dashboard** | Daily market scan with stock | Decision Dashboard |
-
-### Notification Channels
-
-| Channel | Environment Variables | Message Format |
-|:--------|:---------------------|:---------------|
-| WeChat Work | `WECHAT_WEBHOOK_URL` | Markdown |
-| Feishu/Lark | `FEISHU_WEBHOOK_URL` | Markdown Card |
-| Telegram | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | Markdown |
-| Email | `EMAIL_SENDER` + `EMAIL_PASSWORD` | HTML |
-| Pushover | `PUSHOVER_USER_KEY` + `PUSHOVER_API_TOKEN` | Plain Text |
-| Custom Webhook | `CUSTOM_WEBHOOK_URLS` | Auto-adapt |
-
----
-
-## Configuration Options
-
-See `clarity/core/config.py`:
-
-```python
-from clarity import AgentConfig
-
-config = AgentConfig(
-    llm_provider="openai",              # openai, anthropic, google
-    deep_think_llm="gpt-5.2",
-    online_tools=True,                
-    max_retries=3,
-)
+    ├── core/            # Core agents & tools
+    └── dataflows/       # Data source integrations
 ```
 
 ---
