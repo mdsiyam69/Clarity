@@ -36,28 +36,51 @@
 
 ## 简介
 
-Clarity 是一个基于 **原生 Claude-skill** 架构构建的金融分析智能体框架。它采用 **Planning-with-Files** 模式，通过持久化的任务计划、研究发现和进度日志来协调多个专业子智能体完成复杂的金融分析任务。
+Clarity 是一个基于 **原生 Claude-skill** 架构的金融分析智能体，支持股票分析、持仓追踪、筛选策略和决策仪表盘。采用 **Planning-with-Files** 模式，通过多智能体协作完成复杂的金融分析任务。
 
 ### 核心特点
 
-- 🧠 **Claude-skill 原生架构**：遵循 Anthropic 推荐的智能体设计模式
-- 📁 **Planning-with-Files**：通过文件系统持久化上下文，解决 LLM 长任务"遗忘"问题
-- 🤖 **多智能体协作**：6 个专业子智能体分工明确，协同完成分析任务
-- 📊 **决策仪表盘**：每日自动扫描市场，推荐值得关注的股票
-- 🔔 **多渠道推送**：支持企业微信、飞书、Telegram、邮件等多种通知渠道
-- 🌐 **多市场支持**：A 股、港股、美股（纳斯达克）全覆盖
+- 🧠 **Claude-skill 原生架构** - 遵循 Anthropic 推荐的智能体设计模式
+- 🌐 **多市场全覆盖** - A 股、港股、美股数据源自动切换
+- 📊 **6 大专业智能体** - 基本面、技术面、新闻、情绪、持仓、筛选
+- 🔔 **多渠道推送** - 企业微信、飞书、Telegram、邮件等
+- 🚀 **REST API & Web UI** - 完整的接口和图形界面
+
+---
+
+## 数据源
+
+Clarity 整合了多个金融数据源，根据市场类型自动选择最优数据源：
+
+| 数据类型 | 数据源 | 市场覆盖 | 说明 |
+|:--------|:------|:---------|:-----|
+| **A 股行情** | AkShare | 沪深主板、科创板、创业板 | 实时数据 |
+| **A 股行情** | EFinance | 沪深主板、科创板、创业板 | 备选数据源 |
+| **全球行情** | yFinance | 美股、港股、A 股 | 全球市场 |
+| **财务数据** | SimFin | 美股 | 财报数据 |
+| **新闻资讯** | Finnhub | 全球 | 公司新闻 |
+| **新闻资讯** | Google News | 全球 | 聚合新闻 |
+| **社交情绪** | Reddit | 全球 | 社区讨论 |
+| **技术指标** | Stockstats | 全球 | 技术分析 |
+| **网页搜索** | Serper API | 全球 | 增强搜索能力 |
+| **内容提取** | Jina AI | 全球 | 网页解析 |
+
+**数据源优先级策略：**
+- **A 股**：AkShare (优先) → EFinance (备选) → yFinance (兜底)
+- **港股**：yFinance
+- **美股**：yFinance + Finnhub + SimFin
 
 ---
 
 ## 功能特性
 
-| 功能 | 描述 | 命令 |
-|:-----|:-----|:-----|
-| **持仓跟踪** | 追踪知名投资者（如 Warren Buffett）的最新持仓变化 | `track "Warren Buffett"` |
-| **股票分析** | 深度分析特定股票的技术面、基本面、新闻和市场情绪 | `analyze AAPL` |
-| **股票筛选** | 根据复杂条件筛选符合要求的股票 | `screen "高股息科技股"` |
-| **自然语言查询** | 支持中英文自然语言查询 | `ask "分析苹果公司"` |
-| **决策仪表盘** | 每日扫描热门股票并生成报告 | `dashboard` |
+| 功能 | 描述 |
+|:-----|:-----|
+| **股票分析** | 技术面 + 基本面 + 新闻 + 市场情绪四维度深度分析 |
+| **持仓跟踪** | 追踪 Warren Buffett 等知名投资者的最新持仓变化 |
+| **股票筛选** | 基于自然语言描述筛选符合条件的股票 |
+| **决策仪表盘** | 每日自动扫描市场并推荐值得关注的股票 |
+| **多渠道推送** | 分析报告自动推送到企业微信、飞书、Telegram 等 |
 
 ---
 
@@ -79,47 +102,27 @@ uv sync
 
 ```bash
 # ===== 必需配置 =====
-OPENAI_API_KEY=your_openai_api_key
-FINNHUB_API_KEY=your_finnhub_api_key
+OPENAI_API_KEY=your_openai_api_key           # OpenAI API（或兼容接口）
+FINNHUB_API_KEY=your_finnhub_api_key         # Finnhub 新闻数据（免费层可用）
 
-# ===== 可选：网络搜索 =====
-SERPER_API_KEY=your_serper_api_key
-JINA_API_KEY=your_jina_api_key
+# ===== 可选：增强搜索（推荐配置）=====
+SERPER_API_KEY=your_serper_api_key           # Google 搜索 API
+JINA_API_KEY=your_jina_api_key               # 网页内容提取
 
-# ===== 可选：通知渠道 =====
-# 企业微信机器人
-WECHAT_WEBHOOK_URL=https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
-
-# 飞书机器人
-FEISHU_WEBHOOK_URL=https://open.feishu.cn/open-apis/bot/v2/hook/xxx
-
-# Telegram Bot
-TELEGRAM_BOT_TOKEN=123456:ABC-DEF...
+# ===== 可选：通知推送 =====
+WECHAT_WEBHOOK_URL=https://qyapi.weixin.qq.com/...     # 企业微信
+FEISHU_WEBHOOK_URL=https://open.feishu.cn/...          # 飞书
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF...                   # Telegram
 TELEGRAM_CHAT_ID=123456789
-
-# 邮件 (QQ/163/Gmail 等自动识别 SMTP)
-EMAIL_SENDER=your@qq.com
+EMAIL_SENDER=your@qq.com                               # 邮件
 EMAIL_PASSWORD=授权码
 
-# Pushover (iOS/Android 推送)
-PUSHOVER_USER_KEY=xxx
-PUSHOVER_API_TOKEN=xxx
-
-# 自定义 Webhook (钉钉、Discord、Slack、Bark 等)
-CUSTOM_WEBHOOK_URLS=https://oapi.dingtalk.com/robot/send?access_token=xxx
-```
-
-#### Qwen（OpenAI 兼容模式）
-
-```bash
-# ===== 可选：Qwen =====
-# 运行时通过 CLI 参数切换：uv run run_agent.py --model qwen ...
+# ===== 可选：Qwen 模型（阿里通义千问）=====
 QWEN_API_KEY=your_dashscope_api_key
 QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 QWEN_MODEL=qwen-latest
+# 使用方式：uv run run_agent.py --model qwen analyze AAPL
 ```
-
-Qwen 模式下如需联网检索，建议配置 `SERPER_API_KEY`。未配置时会回退为抓取 Google News，可能触发频控。
 
 ---
 
@@ -260,142 +263,48 @@ notification.send("# 测试报告\n这是 Markdown 格式的消息")
 
 ---
 
-## 工作流程
-
-以 `run_track("Warren Buffett")` 为例，展示系统工作流程：
-
-```
-用户输入: uv run python run_agent.py track "Warren Buffett"
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    run_agent.py                             │
-│                                                             │
-│  1. 加载 .env 环境变量                                       │
-│  2. 创建 AgentConfig                                        │
-│  3. 创建 FinancialAgentOrchestrator                         │
-│  4. 调用 orchestrator.run(task_type=HOLDINGS_TRACKING, ...) │
-└─────────────────────────────────────────────────────────────┘
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│               FinancialAgentOrchestrator                    │
-│                                                             │
-│  1. MasterAgent.create_task_plan()  ──► 初始化 task_plan.md │
-│  2. WorkingAgent.execute_plan()     ──► 执行各 SubAgent     │
-│  3. StateChecker.validate_step()    ──► 验证/重试           │
-│  4. MasterAgent.synthesize_results() ──► 合成最终报告       │
-└─────────────────────────────────────────────────────────────┘
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   SubAgents 执行                             │
-│                                                             │
-│  Step 1: HoldingsHunter                                     │
-│    ├─► 搜索 SEC 13F 文件                                    │
-│    ├─► 解析持仓数据                                         │
-│    └─► 生成持仓报告                                         │
-│                                                             │
-│  Step 2: NewsAnalyst                                        │
-│    └─► 搜索相关新闻并分析                                   │
-│                                                             │
-│  每步执行后更新 Planning Files:                              │
-│    • findings.md  ←  追加分析结果                           │
-│    • progress.md  ←  追加进度日志                           │
-│    • task_plan.md ←  更新状态表                             │
-└─────────────────────────────────────────────────────────────┘
-```
+## 工作原理
 
 ### Planning-with-Files 模式
 
-系统使用三个持久化文件来管理长任务：
+系统使用三个持久化文件管理长任务，解决 LLM "遗忘"问题：
 
-| 文件 | 作用 | 更新时机 |
-|:-----|:-----|:---------|
-| `task_plan.md` | 任务计划、阶段状态、SubAgent 分配 | 任务开始、状态变更 |
-| `findings.md` | 研究发现、API 返回数据、分析结果 | 每个 SubAgent 完成后 |
-| `progress.md` | 执行日志、错误记录、重试追踪 | 每步操作后 |
+| 文件 | 作用 |
+|:-----|:-----|
+| `task_plan.md` | 任务计划、阶段状态、智能体分配 |
+| `findings.md` | 研究发现、API 数据、分析结果 |
+| `progress.md` | 执行日志、错误记录、重试追踪 |
 
-**核心规则：**
-- **2-Action Rule**：每 2 次操作后更新 `findings.md`
-- **决策前重读**：关键决策前重读 `task_plan.md`
-- **错误持久化**：所有错误都记录到文件，避免重复犯错
+**执行流程：** MasterAgent 规划 → WorkingAgent 执行 → SubAgents 分工 → StateChecker 验证 → 生成报告
 
 ---
 
 ## 架构设计
 
+### 核心智能体
+
+| 智能体 | 职责 |
+|:-------|:-----|
+| **MasterAgent** | 任务规划、结果合成 |
+| **WorkingAgent** | 执行协调、流程控制 |
+| **StateChecker** | 状态验证、错误重试 |
+| **Fundamentals Analyst** | 财务报表、基本面分析 |
+| **Technical Analyst** | 技术指标（MACD、RSI、布林带）|
+| **News Analyst** | 新闻收集与情感分析 |
+| **Sentiment Analyst** | 社交媒体情绪监控 |
+| **Holdings Hunter** | 机构持仓追踪（SEC 13F）|
+| **Alpha Hound** | 股票筛选与评分 |
+
+### 目录结构
+
 ```
 Clarity/
-├── run_agent.py          # CLI 入口
-├── webui.py              # Web UI (Gradio)
-├── templates/            # 规划文件模板
-├── runtime/              # 运行时文件（git-ignored）
-│   ├── task_plan.md
-│   ├── findings.md
-│   ├── progress.md
-│   └── reports/
+├── api.py               # REST API 服务器
+├── webui.py             # Gradio Web 界面
+├── run_agent.py         # CLI 命令行工具
 └── clarity/
-    ├── core/             # 核心智能体
-    │   ├── orchestrator.py     # 编排器
-    │   ├── master_agent.py     # 主智能体（规划）
-    │   ├── working_agent.py    # 工作智能体（执行）
-    │   ├── state_checker.py    # 状态检查器
-    │   ├── notification.py     # 通知服务
-    │   ├── subagents/          # 子智能体
-    │   │   ├── fundamentals_analyst.py
-    │   │   ├── sentiment_analyst.py
-    │   │   ├── news_analyst.py
-    │   │   ├── technical_analyst.py
-    │   │   ├── holdings_hunter.py
-    │   │   ├── alpha_hound.py
-    │   │   └── daily_dashboard.py
-    │   └── tools/              # 工具
-    │       ├── finnhub_tools.py
-    │       ├── search_tools.py
-    │       ├── dashboard_scanner.py
-    │       └── data_provider/
-    └── dataflows/        # 数据工具
-```
-
-### 子智能体
-
-| 智能体 | 职责 | 使用场景 |
-|:-------|:-----|:---------|
-| **Fundamentals Analyst** | 分析公司财务报表和基本面指标 | 股票分析 |
-| **Technical Analyst** | 分析技术指标（MACD、RSI、布林带等） | 股票分析 |
-| **News Analyst** | 收集和分析相关新闻 | 所有任务 |
-| **Sentiment Analyst** | 分析市场情绪和社交媒体讨论 | 股票分析 |
-| **Holdings Hunter** | 追踪机构和知名投资者持仓 | 持仓跟踪 |
-| **Alpha Hound** | 基于复杂条件筛选股票 | 股票筛选 |
-| **Daily Dashboard** | 每日市场扫描和值得关注的股票 | 决策仪表盘 |
-
-### 通知渠道
-
-| 渠道 | 环境变量 | 消息格式 |
-|:-----|:---------|:---------|
-| 企业微信 | `WECHAT_WEBHOOK_URL` | Markdown |
-| 飞书 | `FEISHU_WEBHOOK_URL` | Markdown 卡片 |
-| Telegram | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | Markdown |
-| 邮件 | `EMAIL_SENDER` + `EMAIL_PASSWORD` | HTML |
-| Pushover | `PUSHOVER_USER_KEY` + `PUSHOVER_API_TOKEN` | 纯文本 |
-| 自定义 Webhook | `CUSTOM_WEBHOOK_URLS` | 自动适配 |
-
----
-
-## 配置选项
-
-详见 `clarity/core/config.py`：
-
-```python
-from clarity import AgentConfig
-
-config = AgentConfig(
-    llm_provider="openai",              # openai, anthropic, google
-    deep_think_llm="gpt-5.2",
-    online_tools=True,                  # 使用在线工具
-    max_retries=3,
-)
+    ├── core/            # 核心智能体与工具
+    └── dataflows/       # 数据源集成
 ```
 
 ---
